@@ -201,19 +201,19 @@ def update_project_detail(request):
             "errmsg": "系统错误，请联系管理员"
         })
 
-
 @ensure_csrf_cookie
 @require_http_methods(["GET"])
 def get_project_detail_list(request):
     """
     获取学习项目明细列表
-    支持按名称搜索和分页
+    支持按名称搜索、分页和多种排序方式
     """
     try:
         # 获取查询参数
         search_name = request.GET.get('search_name', '')
         page = int(request.GET.get('page', 1))
         page_size = int(request.GET.get('page_size', 10))
+        sort_by = request.GET.get('sort_by', 'c_time')  # 默认按创建时间排序
 
         # 构建查询
         query = PorjectDetail.objects.select_related('study_project').all()
@@ -222,13 +222,24 @@ def get_project_detail_list(request):
         if search_name:
             query = query.filter(name__icontains=search_name)
 
+        # 根据不同的排序方式设置排序规则
+        if sort_by == 'project':
+            # 按学习项目排序，次排序为创建时间
+            query = query.order_by('study_project__name', '-c_time')
+        elif sort_by == 'date':
+            # 按学习日期排序，次排序为创建时间
+            query = query.order_by('c_date', '-c_time')
+        else:
+            # 默认按创建时间排序
+            query = query.order_by('-c_time')
+
         # 计算总记录数
         total_count = query.count()
 
         # 分页
         start = (page - 1) * page_size
         end = start + page_size
-        details = query.order_by('-c_time')[start:end]
+        details = query[start:end]
 
         # 构建返回数据
         data = []
@@ -236,13 +247,11 @@ def get_project_detail_list(request):
             data.append({
                 "id": detail.id,
                 "name": detail.name,
-                # "study_project_id": detail.study_project.id,
                 "study_project_name": detail.study_project.name,
                 "score": detail.score,
                 "c_date": detail.c_date.strftime("%Y-%m-%d"),
                 "c_time": detail.c_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "notes": detail.notes or "",
-                # "creator": detail.creator
             })
 
         return JsonResponse({

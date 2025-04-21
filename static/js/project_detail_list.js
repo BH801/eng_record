@@ -2,14 +2,20 @@ $(document).ready(function() {
     let currentPage = 1;
     const pageSize = 10;
 
-    function loadData(page = 1, searchName = '') {
+    function loadData(page = 1, searchName = '', sortBy = '') {
+        // 获取当前选择的排序方式
+        if (!sortBy) {
+            sortBy = $('#sortOption').val();
+        }
+
         $.ajax({
             url: '/api/project_detail/list',
             method: 'GET',
             data: {
                 page: page,
                 page_size: pageSize,
-                search_name: searchName
+                search_name: searchName,
+                sort_by: sortBy
             },
             success: function(response) {
                 if (response.errno === "0") {
@@ -26,6 +32,19 @@ $(document).ready(function() {
         });
     }
 
+    // 添加排序选择变化事件
+    $('#sortOption').change(function() {
+        currentPage = 1;
+        const searchName = $('#searchName').val().trim();
+        loadData(currentPage, searchName);
+    });
+
+    // 修改搜索按钮点击事件
+    $('#searchBtn').click(function() {
+        const searchName = $('#searchName').val().trim();
+        currentPage = 1;
+        loadData(currentPage, searchName);
+    });
     function renderTable(items) {
         const tbody = $('#detailTable tbody');
         tbody.empty();

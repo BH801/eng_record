@@ -34,14 +34,21 @@
 
         <div class="card">
             <div class="card-body">
-                <div class="search-box row">
-                    <div class="col-md-3">
-                        <input type="text" id="searchName" class="form-control" placeholder="按名称搜索...">
-                    </div>
-                    <div class="col-md-2">
-                        <button id="searchBtn" class="btn btn-secondary">搜索</button>
-                    </div>
-                </div>
+<div class="search-box row">
+    <div class="col-md-3">
+        <input type="text" id="searchName" class="form-control" placeholder="按名称搜索...">
+    </div>
+    <div class="col-md-3">
+        <select id="sortOption" class="form-control">
+            <option value="c_time">按创建时间排序</option>
+            <option value="project">按学习项目排序</option>
+            <option value="date">按学习日期排序</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button id="searchBtn" class="btn btn-secondary">搜索</button>
+    </div>
+</div>
 
                 <div class="table-responsive">
                     <table id="detailTable" class="table table-striped table-bordered">
