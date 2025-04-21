@@ -34,5 +34,6 @@ _test/
 *.log
 *.png
 db.sqlite3
+skill.md
 
 
