@@ -13,7 +13,7 @@ class StudyProject(BaseModel):
     # main_sort = models.ForeignKey(MainSort, on_delete=models.CASCADE)  # 主分类
 
 class PorjectDetail(BaseModel):
-    name = models.CharField(max_length=255, unique=True)  # 详细分类名称
+    name = models.CharField(max_length=255,blank=True,null=True )  # 详细分类名称
     notes = models.TextField(blank=True, null=True)  # 备注
     study_project = models.ForeignKey(StudyProject, on_delete=models.CASCADE)  # 学习项目
     score = models.IntegerField(default=0)  # 分数

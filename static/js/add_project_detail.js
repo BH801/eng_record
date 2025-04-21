@@ -1,8 +1,15 @@
 $(document).ready(function() {
     // 初始化日期选择器
-    flatpickr("#c_date", {
-        dateFormat: "Y-m-d"
-    });
+// Flatpickr 配置
+flatpickr("#c_date", {
+    enableTime: true, // 启用时间选择
+    dateFormat: "Y-m-d H:i", // 设置日期时间格式
+    locale: "zh", // 使用中文
+    minuteIncrement: 1, // 分钟增量为1
+    time_24hr: true, // 使用24小时制
+    defaultHour: new Date().getHours(), // 默认当前小时
+    defaultMinute: new Date().getMinutes(), // 默认当前分钟
+});
 
     // 加载学习项目下拉列表
     $.ajax({
@@ -42,7 +49,7 @@ $(document).ready(function() {
             name: $('#name').val(),
             study_project: $('#study_project').val(),
             score: $('#score').val(),
-            c_date: $('#c_date').val(),
+            c_datetime: $('#c_date').val(),
             notes: $('#notes').val()
         };
 

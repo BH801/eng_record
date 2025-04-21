@@ -23,7 +23,7 @@ def add_project_detail(request):
         data = json.loads(request.body)
 
         # 必填字段验证
-        required_fields = ['name', 'study_project', 'score', 'c_date']
+        required_fields = ['study_project', 'score', 'c_datetime']
         for field in required_fields:
             if field not in data:
                 return JsonResponse({
@@ -63,7 +63,11 @@ def add_project_detail(request):
 
         # 验证日期格式
         try:
-            c_date = datetime.strptime(data['c_date'], '%Y-%m-%d').date()
+            # c_date = datetime.strptime(data['c_date'], '%Y-%m-%d').date()
+            # 这里改成校验datetime格式
+            c_datetime= datetime.strptime(data['c_datetime'], '%Y-%m-%d %H:%M')
+            c_date  = c_datetime.date()
+            c_time = c_datetime
         except ValueError:
             return JsonResponse({
                 "errno": "1",
@@ -78,6 +82,7 @@ def add_project_detail(request):
                 score=score,
                 notes=data.get('notes', ''),
                 c_date=c_date,
+                c_time=c_time,
             )
 
         return JsonResponse({
