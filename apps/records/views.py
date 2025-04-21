@@ -85,3 +85,12 @@ class StudyProjectPageList(View):
         return render(request, 'records/study_project_list.html', {'title': '学习项目列表'})
 
 
+
+# Projectdetail list 和 添加页面
+class ProjectDetailPage(View):
+    def get(self,request):
+        return render(request, 'records/add_project_detail.html', {'title': '项目详细分类添加'})
+class ProjectDetailPageList(View):
+    def get(self,request):
+        return render(request, 'records/project_detail_list.html', {'title': '项目详细分类列表'})
+

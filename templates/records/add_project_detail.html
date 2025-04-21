@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加学习项目明细</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>添加学习项目明细</h2>
+        <form id="projectDetailForm">
+            <div class="form-group">
+                <label for="name">名称</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="study_project">所属学习项目</label>
+                <select class="form-control" id="study_project" required>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="score">成绩</label>
+                <input type="number" class="form-control" id="score" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="c_date">日期</label>
+                <input type="text" class="form-control" id="c_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">备注</label>
+                <textarea class="form-control" id="notes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">提交</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/js/add_project_detail.js"></script>
+<script src="/static/js/common.js"></script>
+</body>
+</html>
