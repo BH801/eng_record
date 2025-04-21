@@ -7,3 +7,8 @@
 ## records
 helloword(is ok):
 get:       http://127.0.0.1:8000/hello
+
+
+
+## 主分类添加页面：
+http://127.0.0.1:8000/main_sort_page
