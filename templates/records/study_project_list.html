@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>学习项目列表</h2>
+        <div class="mb-3">
+            <a href="/study_project_page" class="btn btn-primary">添加新项目</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>备注</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="projectList">
+                <!-- 数据将通过JavaScript动态填充 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 获取CSRF Token的函数
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // 获取并显示项目列表
+        function fetchProjects() {
+            fetch('http://127.0.0.1:8000/study_project', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = '';
+
+                data.data.forEach(project => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${project.id}</td>
+                        <td>${project.name}</td>
+                        <td>${project.notes}</td>
+                        <td>${project.create_time}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProject(${project.id})">删除</button>
+                        </td>
+                    `;
+                    projectList.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('获取数据失败！');
+            });
+        }
+
+        // 删除项目
+        function deleteProject(id) {
+            if (confirm('确定要删除这个项目吗？')) {
+                fetch(`http://127.0.0.1:8000/study_project`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ id: id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('删除成功！');
+                    fetchProjects(); // 重新加载列表
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('删除失败！');
+                });
+            }
+        }
+
+        // 页面加载时获取项目列表
+        document.addEventListener('DOMContentLoaded', fetchProjects);
+    </script>
+</body>
+</html>

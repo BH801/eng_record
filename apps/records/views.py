@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from utils.res_code import json_response
 from django.views import View
-from .models import MainSort
+from .models import MainSort,StudyProject
 import json
 
 # Create your views here.
@@ -40,6 +40,33 @@ class MainSortAPI(View):
             return json_response(errmsg="主分类不存在")
 
 
+# 学习项目：
+class StudyProjectManage(View):
+    '''add post'''
+    def post(self,requests):
+        post_values = json.loads(requests.body.decode('utf-8'))
+        name = post_values.get('name')
+        notes = post_values.get('notes')
+        mainsort = StudyProject.objects.create(name=name,notes=notes)
+        return json_response(errmsg= "学习项目添加成功")
+
+    ''' list'''
+    def get(self,request):
+        main_sort_data = StudyProject.objects.all().values('id', 'name','notes','create_time')
+        # print(main_sort_data)
+        return json_response(data = list(main_sort_data))   # data = [{id:xx,"name":xx,"notes":xx,"createtime":''},...]
+    def delete(self,request):
+        post_values = json.loads(request.body.decode('utf-8'))
+        id = post_values.get('id')
+        try:
+            mainsort = StudyProject.objects.get(id=int(id))
+            mainsort.delete()
+            return json_response(errmsg="学习项目删除成功")
+        except MainSort.DoesNotExist:
+            return json_response(errmsg="学习项目不存在")
+
+
+
 class MainSOrtPage(View):
     def get(self,request):
         return render(request, 'records/addMainSort.html', {'title': '主分类添加'})
@@ -47,5 +74,14 @@ class MainSOrtPage(View):
 class MainSOrtPageList(View):
     def get(self,request):
         return render(request, 'records/main_sort_list.html', {'title': '主分类列表'})
+
+
+# 学习项目添加和列表页面
+class StudyProjectPage(View):
+    def get(self,request):
+        return render(request, 'records/add_study_project.html', {'title': '学习项目添加'})
+class StudyProjectPageList(View):
+    def get(self,request):
+        return render(request, 'records/study_project_list.html', {'title': '学习项目列表'})
 
 

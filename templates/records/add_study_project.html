@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>添加学习项目</h2>
+        <form id="addProjectForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">项目名称</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="notes" class="form-label">项目备注</label>
+                <textarea class="form-control" id="notes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">添加</button>
+            <a href="study_project_list.html" class="btn btn-secondary">返回列表</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 获取CSRF Token的函数
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        document.getElementById('addProjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const projectData = {
+                name: document.getElementById('name').value,
+                notes: document.getElementById('notes').value
+            };
+
+            fetch('http://127.0.0.1:8000/study_project', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(projectData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.errmsg || '添加成功！');
+                window.location.href = '/study_project_page_list';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('添加失败！');
+            });
+        });
+    </script>
+</body>
+</html>
