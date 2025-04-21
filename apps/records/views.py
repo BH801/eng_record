@@ -27,6 +27,13 @@ class MainSortAPI(View):
         print(main_sort_data)
 
         return json_response(main_sort_data)
+    def post(self,request):
+        name = request.POST.get('name')
+        note = request.POST.get('note')
+        MainSort.objects.create(name=name,notes=note)
+        # mainsort.save()
+        # new_main_sort.save()
+        return json_response(errmsg= "主分类添加成功")
 
 class MainSOrtPage(View):
     def get(self,request):
